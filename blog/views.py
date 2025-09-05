@@ -6,7 +6,7 @@ from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleS
 from .models import Post
 
 @api_view(['POST'])
-def add_Post(request):
+def add_post(request):
     serializer = PostSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     title = serializer.validated_data['title']
@@ -20,13 +20,13 @@ def add_Post(request):
     return Response({"message": "post added successfully"}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-def get_All_Post(request):
+def get_all_post(request):
     posts = Post.objects.all()
     serializer = PostResponseSerializer(posts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def get_Post_By_Title(request, title):
+def get_post_by_title(request, title):
     title = (title or "").strip()
     if not title:
         return Response(
@@ -45,7 +45,7 @@ def get_Post_By_Title(request, title):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def get_Post_By_id(request, id):
+def get_post_by_id(request, id):
     post = get_object_or_404(Post, id=id)
     serializer = PostGetByidSerializer(post)
     return Response(serializer.data, status=status.HTTP_200_OK)

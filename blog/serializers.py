@@ -21,11 +21,11 @@ class PostGetByTitleSerializer(serializers.ModelSerializer):
 class PostGetByidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'date_posted', 'updated', 'status']
+        fields = ['id', 'title', 'content', 'date_posted', 'updated', 'status']
         read_only_fields = ['date_posted', 'updated']
 
 class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'date_posted', 'updated', 'status']
+        fields = ['id', 'title', 'content', 'date_posted', 'updated', 'status']
         read_only_fields = ['date_posted', 'updated']

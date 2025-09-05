@@ -24,7 +24,13 @@ class PostGetByidSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'date_posted', 'updated', 'status']
         read_only_fields = ['date_posted', 'updated']
 
-class PostUpdateSerializer(serializers.ModelSerializer):
+class PostUpdatebyidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'date_posted', 'updated', 'status']
+        read_only_fields = ['date_posted', 'updated']
+
+class PostUpdatebyTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'date_posted', 'updated', 'status']

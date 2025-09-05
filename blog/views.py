@@ -1,14 +1,9 @@
-from functools import partial
-
-from django.shortcuts import render
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleSerializer, PostGetByidSerializer, PostUpdateSerializer
 from .models import Post
-
-# Create your views here.
 
 @api_view(['POST'])
 def add_Post(request):
@@ -55,11 +50,12 @@ def get_Post_By_id(request, id):
     serializer = PostGetByidSerializer(post)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(['PUT', 'PATCH'])
-def update_Post(request, id):
-    post = get_object_or_404(Post, id=id)
-    partial = request.method == 'PATCH'
-    serializer = PostUpdateSerializer(post, data=request.data, partial=partial)
+def update_post(request, id):
+    post = get_object_or_404(Post.objects, pk=id)
+    is_partial = request.method == 'PATCH'
+    serializer = PostUpdateSerializer(post, data=request.data, partial=is_partial)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

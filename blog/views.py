@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleSerializer, PostGetByidSerializer, \
-    PostUpdatebyidSerializer, PostUpdatebyTitleSerializer
+    PostUpdatebyidSerializer, PostUpdatebyTitleSerializer, CommentSerializer
 from .models import Post
 
 @api_view(['POST'])
@@ -59,7 +59,7 @@ def update_post_by_id(request, id):
     serializer = PostUpdatebyidSerializer(post, data=request.data, partial=is_partial)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"message", "updated successfully"}, serializer.data)
 
 @api_view(['PUT'])
 def update_post_by_title(request, title):
@@ -79,10 +79,39 @@ def update_post_by_title(request, title):
     serializer = PostUpdatebyTitleSerializer(post, data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"message": "updated successfully"}, serializer.data)
 
 @api_view(['DELETE'])
 def delete_post(request, id):
     post = get_object_or_404(Post, id=id)
     post.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response({"message": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['DELETE'])
+def delete_post_by_title(request, title):
+    post = get_object_or_404(Post, title=title)
+    post.delete()
+    return Response({"message": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def add_comment(request, id, comment=None):
+    post = get_object_or_404(Post, id=id)
+    request_data = request.data or {}
+    comment_text = request_data.get("comment", comment)
+
+    if not comment_text:
+        return Response({"error": "comment is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = CommentSerializer(data={"comment": comment_text})
+    serializer.is_valid(raise_exception=True)
+    serializer.save(post=post)
+
+    return Response({"message": "comment added successfully"}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def get_comments(request, id):
+    post = get_object_or_404(Post, id=id)
+    comments = post.comments.all()
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

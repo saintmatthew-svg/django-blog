@@ -1,0 +1,66 @@
+from functools import partial
+
+from django.shortcuts import render
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleSerializer, PostGetByidSerializer, \
+    PostUpdateSerializer
+from .models import Post
+
+# Create your views here.
+
+@api_view(['POST'])
+def add_Post(request):
+    serializer = PostSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    title = serializer.validated_data['title']
+    content = serializer.validated_data['content']
+    serializer.save()
+
+    Post.objects.create(
+        title=title,
+        content=content
+    )
+    return Response({"message": "post added successfully"}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def get_All_Post(request):
+    posts = Post.objects.all()
+    serializer = PostResponseSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_Post_By_Title(request, title):
+    title = (title or "").strip()
+    if not title:
+        return Response(
+            {"error": "Title parameter is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    posts = Post.objects.filter(title=title)
+    if not posts.exists():
+        return Response(
+            {"error": f"No posts found with title '{title}'"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = PostGetByTitleSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_Post_By_id(request, id):
+    post = get_object_or_404(Post, id=id)
+    serializer = PostGetByidSerializer(post)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['PUT', 'PATCH'])
+def update_Post(request, id):
+    post = get_object_or_404(Post, id=id)
+    partial = request.method == 'PATCH'
+    serializer = PostUpdateSerializer(post, data=request.data, partial=partial)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_200_OK)

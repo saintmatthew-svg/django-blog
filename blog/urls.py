@@ -10,6 +10,6 @@ urlpatterns = [
     path('updatebytitle/<str:title>/', views.update_post_by_title, name='update_Post_By_Title'),
     path('delete/<int:id>/', views.delete_post, name='delete_Post'),
     path('deletebytitle/<str:title>/', views.delete_post_by_title, name='delete_Post_By_Title'),
-    path('comment/<int:id>/<str:comment>/', views.add_comment, name='add_Comment'),
+    path('comment/<int:id>/', views.add_comment, name='add_Comment'),
     path('getcomments/<int:id>/', views.get_comments, name='get_All_Comments'),
 ]

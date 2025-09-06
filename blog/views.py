@@ -59,7 +59,7 @@ def update_post_by_id(request, id):
     serializer = PostUpdatebyidSerializer(post, data=request.data, partial=is_partial)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response({"message", "updated successfully"}, serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['PUT'])
 def update_post_by_title(request, title):
@@ -79,7 +79,7 @@ def update_post_by_title(request, title):
     serializer = PostUpdatebyTitleSerializer(post, data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response({"message": "updated successfully"}, serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
 def delete_post(request, id):
@@ -106,7 +106,6 @@ def add_comment(request, id, comment=None):
     serializer = CommentSerializer(data={"comment": comment_text})
     serializer.is_valid(raise_exception=True)
     serializer.save(post=post)
-
     return Response({"message": "comment added successfully"}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])

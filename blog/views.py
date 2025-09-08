@@ -6,6 +6,8 @@ from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleS
     PostUpdatebyidSerializer, PostUpdatebyTitleSerializer, CommentSerializer
 from .models import Post
 
+#{!!!POSTS!!!}
+
 @api_view(['POST'])
 def add_post(request):
     serializer = PostSerializer(data=request.data)
@@ -93,6 +95,7 @@ def delete_post_by_title(request, title):
     post.delete()
     return Response({"message": "deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
+#{!!!COMMENTS!!!}
 
 @api_view(['POST'])
 def add_comment(request, id, comment=None):

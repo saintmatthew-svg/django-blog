@@ -3,6 +3,7 @@ from rest_framework import serializers
 from blog.models import Post, Comment
 
 #{!!!POSTS!!!}
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
@@ -37,6 +38,7 @@ class PostUpdatebyTitleSerializer(serializers.ModelSerializer):
         read_only_fields = ['date_posted', 'updated']
 
 #{!!!COMMENTS!!!}
+
 class CommentSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:

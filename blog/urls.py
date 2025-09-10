@@ -18,4 +18,5 @@ urlpatterns = [
 
     path('comment/<int:id>/', views.add_comment, name='add_Comment'),
     path('getcomments/<int:id>/', views.get_comments, name='get_All_Comments'),
+    path('deletecomment/<int:post_id>/<int:comment_id>/', views.delete_comment, name='delete_Comment'),
 ]

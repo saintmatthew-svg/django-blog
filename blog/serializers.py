@@ -51,3 +51,10 @@ class CommentSerializer(serializers.ModelSerializer):
         if not value:
             raise serializers.ValidationError("Comment cannot be empty.")
         return value
+
+
+class DeleteComentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'comment', 'date_posted', 'updated', 'status']
+        read_only_fields = ['comment','date_posted', 'updated']

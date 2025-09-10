@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleSerializer, PostGetByidSerializer, \
     PostUpdatebyidSerializer, PostUpdatebyTitleSerializer, CommentSerializer
-from .models import Post
+from blog.models import Post, Comment
 
 #{!!!POSTS!!!}
 
@@ -117,3 +117,9 @@ def get_comments(request, id):
     comments = post.comments.all()
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_comment(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, post_id=post_id)
+    comment.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)

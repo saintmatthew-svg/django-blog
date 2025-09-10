@@ -3,6 +3,7 @@
     <words>
       <w>getpost</w>
       <w>updateby</w>
+      <w>updatebyid</w>
     </words>
   </dictionary>
 </component>

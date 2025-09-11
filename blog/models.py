@@ -3,8 +3,10 @@ from django.db import models
 # Create your models here.
 
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=True)
     content = models.TextField()
+    image = models.FileField(upload_to='uploads/images/', null=True, blank=True)
+    video = models.FileField(upload_to='uploads/videos/', null=True, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)

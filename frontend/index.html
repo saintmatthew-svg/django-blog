@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Blog || discover the world</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><b>Welcome to My Blog @Saint_Matthew </b></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#blog">Blog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section id="home" class="section section-home">
+            <h2 class="section-title">Home</h2>
+            <p>Welcome to my blog where I share my thoughts and experiences.</p>
+            <h3>About me</h3>
+            <p>Born in the year <b>2003</b></p>
+            <p>Ezeoru Onyekachi Mathhew born and brought up in Lagos by <b>Mr & Mrs Ezeoru</b>.</p>
+        </section>
+
+        <section id="about" class="section section-about">
+            <h2 class="section-title">About</h2>
+            <p>This blog showcases my journey, projects, and thoughts. Explore the blog section to see posts and interact with comments.</p>
+        </section>
+
+        <section id="contact" class="section section-contact">
+            <h2 class="section-title">Contact</h2>
+            <p>For collaborations or inquiries, reach out via your preferred channel.</p>
+        </section>
+
+        <section id="blog" class="section section-blog">
+            <h2 class="section-title">Blog</h2>
+
+            <div class="api-config">
+                <label for="apiBase" class="form-label">API Base URL</label>
+                <input id="apiBase" type="url" class="input" placeholder="http://localhost:8000/blog/">
+                <button id="saveApiBase" class="btn btn-primary">Save</button>
+                <span id="currentApiBase" class="muted"></span>
+            </div>
+
+            <div class="form-row" style="margin: 8px 0;">
+                <button id="openCreateBtn" class="btn btn-primary">Create Post</button>
+            </div>
+
+            <div id="feedView" class="blog-grid">
+                <div class="blog-panel">
+                    <h3 class="panel-title">All Posts</h3>
+                    <button id="refreshPosts" class="btn btn-secondary">Refresh</button>
+                    <ul id="postsList" class="post-list"></ul>
+                </div>
+
+                <div class="blog-panel">
+                    <h3 class="panel-title">Find Post</h3>
+                    <form id="findByIdForm" class="form inline-form">
+                        <input id="findId" class="input" type="number" placeholder="Post ID" required>
+                        <button class="btn btn-secondary" type="submit">Find by ID</button>
+                    </form>
+                    <form id="findByTitleForm" class="form inline-form">
+                        <input id="findTitle" class="input" placeholder="Post Title" required>
+                        <button class="btn btn-secondary" type="submit">Find by Title</button>
+                    </form>
+                    <div id="singlePost" class="card"></div>
+                </div>
+
+                <div class="blog-panel">
+                    <h3 class="panel-title">Update Post</h3>
+                    <form id="updateByIdForm" class="form">
+                        <div class="form-row">
+                            <input id="updateId" class="input" type="number" placeholder="Post ID" required>
+                        </div>
+                        <div class="form-row">
+                            <input id="updateTitle" class="input" placeholder="New Title (optional)">
+                        </div>
+                        <div class="form-row">
+                            <textarea id="updateContent" class="textarea" rows="3" placeholder="New Content (optional)"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label for="updateImage" class="form-label">Replace Image (optional)</label>
+                            <input id="updateImage" class="input" type="file" accept="image/*">
+                        </div>
+                        <div class="form-row">
+                            <label for="updateVideo" class="form-label">Replace Video (optional)</label>
+                            <input id="updateVideo" class="input" type="file" accept="video/*">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Update by ID</button>
+                    </form>
+                </div>
+
+                <div class="blog-panel">
+                    <h3 class="panel-title">Delete Post</h3>
+                    <form id="deleteByIdForm" class="form inline-form">
+                        <input id="deleteId" class="input" type="number" placeholder="Post ID" required>
+                        <button class="btn btn-danger" type="submit">Delete by ID</button>
+                    </form>
+                    <form id="deleteByTitleForm" class="form inline-form">
+                        <input id="deleteTitle" class="input" placeholder="Post Title" required>
+                        <button class="btn btn-danger" type="submit">Delete by Title</button>
+                    </form>
+                </div>
+
+                <div class="blog-panel">
+                    <h3 class="panel-title">Comments</h3>
+                    <form id="loadCommentsForm" class="form inline-form">
+                        <input id="commentsPostId" class="input" type="number" placeholder="Post ID" required>
+                        <button class="btn btn-secondary" type="submit">Load Comments</button>
+                    </form>
+                    <ul id="commentsList" class="comment-list"></ul>
+                    <form id="addCommentForm" class="form">
+                        <div class="form-row">
+                            <input id="addCommentPostId" class="input" type="number" placeholder="Post ID" required>
+                        </div>
+                        <div class="form-row">
+                            <textarea id="commentText" class="textarea" rows="3" placeholder="Comment" required></textarea>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Add Comment</button>
+                    </form>
+                    <form id="deleteCommentForm" class="form inline-form">
+                        <input id="deleteCommentPostId" class="input" type="number" placeholder="Post ID" required>
+                        <input id="deleteCommentId" class="input" type="number" placeholder="Comment ID" required>
+                        <button class="btn btn-danger" type="submit">Delete Comment</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="createView" class="blog-grid" hidden>
+                <div class="blog-panel">
+                    <h3 class="panel-title">Create Post</h3>
+                    <form id="createPostForm" class="form">
+                        <div class="form-row">
+                            <label for="createContent" class="form-label">What's on your mind?</label>
+                            <textarea id="createContent" class="textarea" rows="4" placeholder="Write something..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label for="createImage" class="form-label">Image (optional)</label>
+                            <input id="createImage" class="input" type="file" accept="image/*">
+                        </div>
+                        <div class="form-row">
+                            <label for="createVideo" class="form-label">Video (optional)</label>
+                            <input id="createVideo" class="input" type="file" accept="video/*">
+                        </div>
+                        <div class="form-row">
+                            <button class="btn btn-primary" type="submit">Post</button>
+                            <button id="backToFeedBtn" class="btn btn-secondary" type="button">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>

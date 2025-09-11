@@ -2,6 +2,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from .serializers import PostSerializer, PostResponseSerializer, PostGetByTitleSerializer, PostGetByidSerializer, \
     PostUpdatebyidSerializer, PostUpdatebyTitleSerializer, CommentSerializer
 from blog.models import Post, Comment
@@ -12,20 +13,14 @@ from blog.models import Post, Comment
 def add_post(request):
     serializer = PostSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    title = serializer.validated_data['title']
-    content = serializer.validated_data['content']
-    serializer.save()
-
-    Post.objects.create(
-        title=title,
-        content=content
-    )
-    return Response({"message": "post added successfully"}, status=status.HTTP_201_CREATED)
+    post = serializer.save()
+    out = PostResponseSerializer(post, context={'request': request}).data
+    return Response(out, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 def get_all_post(request):
     posts = Post.objects.all()
-    serializer = PostResponseSerializer(posts, many=True)
+    serializer = PostResponseSerializer(posts, many=True, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -44,13 +39,13 @@ def get_post_by_title(request, title):
             status=status.HTTP_404_NOT_FOUND
         )
 
-    serializer = PostGetByTitleSerializer(posts, many=True)
+    serializer = PostGetByTitleSerializer(posts, many=True, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_post_by_id(request, id):
     post = get_object_or_404(Post, id=id)
-    serializer = PostGetByidSerializer(post)
+    serializer = PostGetByidSerializer(post, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -60,10 +55,11 @@ def update_post_by_id(request, id):
     is_partial = request.method == 'PATCH'
     serializer = PostUpdatebyidSerializer(post, data=request.data, partial=is_partial)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    post = serializer.save()
+    out = PostResponseSerializer(post, context={'request': request}).data
+    return Response(out, status=status.HTTP_200_OK)
 
-@api_view(['PUT'])
+@api_view(['PUT', 'PATCH'])
 def update_post_by_title(request, title):
     title = (title or "").strip()
     if not title:
@@ -78,10 +74,12 @@ def update_post_by_title(request, title):
         )
 
     post = get_object_or_404(Post, title=title)
-    serializer = PostUpdatebyTitleSerializer(post, data=request.data)
+    is_partial = request.method == 'PATCH'
+    serializer = PostUpdatebyTitleSerializer(post, data=request.data, partial=is_partial)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    post = serializer.save()
+    out = PostResponseSerializer(post, context={'request': request}).data
+    return Response(out, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
 def delete_post(request, id):
